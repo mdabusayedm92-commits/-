@@ -1,0 +1,167 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated customer or admin account profile stored in Firestore",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "fullName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "email": { "type": "string", "format": "email", "maxLength": 180 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "division": { "type": "string", "maxLength": 60 },
+        "district": { "type": "string", "maxLength": 60 },
+        "upazila": { "type": "string", "maxLength": 80 },
+        "address": { "type": "string", "maxLength": 300 },
+        "role": { "type": "string", "enum": ["customer", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "fullName", "email", "role", "createdAt", "updatedAt"]
+    },
+    "AdminMarker": {
+      "title": "AdminMarker",
+      "description": "Explicit RBAC marker document granting admin privileges to a promoted user",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "maxLength": 180 },
+        "promotedBy": { "type": "string", "maxLength": 128 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "promotedBy", "updatedAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Storefront product catalog item with per-product Dhaka and outside-Dhaka delivery fees",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "category": { "type": "string", "enum": ["electronics", "fashion", "home", "beauty", "kids", "other"] },
+        "price": { "type": "number" },
+        "comparePrice": { "type": "number" },
+        "unit": { "type": "string", "maxLength": 50 },
+        "stock": { "type": "number" },
+        "dhakaDeliveryCharge": { "type": "number" },
+        "outsideDhakaDeliveryCharge": { "type": "number" },
+        "description": { "type": "string", "maxLength": 2000 },
+        "imageUrl": { "type": "string", "maxLength": 1000 },
+        "additionalImages": { "type": "array" },
+        "isActive": { "type": "boolean" },
+        "isFeatured": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "category", "price", "stock", "imageUrl", "isActive", "createdAt", "updatedAt"]
+    },
+    "ProductReview": {
+      "title": "ProductReview",
+      "description": "Verified customer rating and review for a product",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "productName": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "rating": { "type": "number" },
+        "comment": { "type": "string", "minLength": 2, "maxLength": 800 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "productId", "productName", "userId", "authorName", "rating", "comment", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Guest or authenticated customer order document with owner/admin PII protection",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string", "minLength": 3, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "isGuest": { "type": "boolean" },
+        "customerName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "customerPhone": { "type": "string", "minLength": 11, "maxLength": 20 },
+        "customerEmail": { "type": "string", "maxLength": 180 },
+        "division": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "district": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "upazila": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "address": { "type": "string", "minLength": 3, "maxLength": 300 },
+        "orderNote": { "type": "string", "maxLength": 400 },
+        "paymentMethod": { "type": "string", "enum": ["cod", "bkash"] },
+        "bkashSender": { "type": "string", "maxLength": 20 },
+        "bkashTrxId": { "type": "string", "maxLength": 40 },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "deliveryCharge": { "type": "number" },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "packed", "shipped", "delivered", "cancelled"] },
+        "statusNote": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orderId", "userId", "customerName", "customerPhone", "division", "district", "upazila", "address", "paymentMethod", "items", "subtotal", "deliveryCharge", "total", "status", "createdAt", "updatedAt"]
+    },
+    "OrderTracking": {
+      "title": "OrderTracking",
+      "description": "Non-PII public order tracking status record keyed by orderId",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string", "minLength": 3, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "phoneLast4": { "type": "string", "minLength": 4, "maxLength": 4 },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "packed", "shipped", "delivered", "cancelled"] },
+        "statusNote": { "type": "string", "maxLength": 300 },
+        "total": { "type": "number" },
+        "district": { "type": "string", "maxLength": 60 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orderId", "userId", "phoneLast4", "status", "total", "district", "updatedAt"]
+    },
+    "ShopSetting": {
+      "title": "ShopSetting",
+      "description": "Public store settings and admin-controlled weekly promo banner configuration",
+      "type": "object",
+      "properties": {
+        "storeName": { "type": "string", "maxLength": 100 },
+        "tagline": { "type": "string", "maxLength": 160 },
+        "supportPhone": { "type": "string", "maxLength": 25 },
+        "bkashNumber": { "type": "string", "maxLength": 20 },
+        "dhakaDelivery": { "type": "number" },
+        "outsideDhakaDelivery": { "type": "number" },
+        "promoBanner": { "type": "object" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["storeName", "tagline", "supportPhone", "bkashNumber", "dhakaDelivery", "outsideDhakaDelivery", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profiles, saved delivery info, and roles"
+    },
+    "/admins/{userId}": {
+      "schema": { "$ref": "#/entities/AdminMarker" },
+      "description": "RBAC admin marker documents controlled by Super Admin"
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Storefront product catalog"
+    },
+    "/productReviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/ProductReview" },
+      "description": "Customer reviews per product"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer and guest orders with owner/admin PII access"
+    },
+    "/orderTracking/{orderId}": {
+      "schema": { "$ref": "#/entities/OrderTracking" },
+      "description": "Non-PII order status lookup"
+    },
+    "/shopSettings/{settingId}": {
+      "schema": { "$ref": "#/entities/ShopSetting" },
+      "description": "Storefront settings and weekly promo campaign config"
+    }
+  }
+}

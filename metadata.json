@@ -1,0 +1,7 @@
+{
+  "name": "জনতা মার্ট - Janata Mart",
+  "description": "বাংলাদেশের সেরা অনলাইন শপিং প্ল্যাটফর্ম - গ্যাজেট, ফ্যাশন, রূপচর্চা ও নিত্যপ্রয়োজনীয় সামগ্রী দ্রুত ডেলিভারি ও সুরক্ষিত পেমেন্ট গেটওয়ে।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
